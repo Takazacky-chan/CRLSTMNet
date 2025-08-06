@@ -1,0 +1,61 @@
+2025-08-01 19:42:01,976 - INFO - Starting training on cuda
+2025-08-01 19:42:01,976 - INFO - Configuration: configs/outdoor_cr32.yaml
+2025-08-01 19:42:01,976 - INFO - Compression ratio: 1/32
+2025-08-01 19:42:01,976 - INFO - Dataset type: outdoor
+2025-08-01 19:42:01,976 - INFO - GPU: NVIDIA GeForce GTX 1650, Memory: 4.3GB
+2025-08-01 19:42:01,976 - INFO - Initial GPU memory: 0.00GB
+2025-08-01 19:42:02,061 - INFO - Using data from F:\CRLSTMNet\data\cost2100\outdoor_20slots
+2025-08-01 19:42:02,061 - INFO - Found 20 .mat files with pattern
+2025-08-01 19:42:02,286 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t10_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:02,682 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t11_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:03,068 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t12_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:03,473 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t13_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:03,882 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t14_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:04,355 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t15_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:04,777 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t16_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:05,209 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t17_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:05,618 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t18_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:06,048 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t19_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:06,428 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t1_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:06,844 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t20_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:07,287 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t2_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:07,692 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t3_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:08,083 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t4_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:08,500 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t5_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:08,904 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t6_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:09,333 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t7_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:09,762 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t8_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:10,190 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t9_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:10,401 - INFO - Split dataset: 3984 samples for train
+2025-08-01 19:42:10,404 - INFO - Found 20 .mat files with pattern
+2025-08-01 19:42:10,635 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t10_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:11,053 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t11_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:11,447 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t12_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:11,840 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t13_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:12,254 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t14_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:12,683 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t15_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:13,069 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t16_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:13,485 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t17_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:13,896 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t18_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:14,339 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t19_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:14,765 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t1_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:15,195 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t20_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:15,650 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t2_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:16,077 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t3_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:16,503 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t4_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:16,915 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t5_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:17,357 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t6_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:17,773 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t7_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:18,207 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t8_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:18,667 - INFO - Processing F:\CRLSTMNet\data\cost2100\outdoor_20slots\H_user_t9_32all.mat: shape (2500, 32, 64)
+2025-08-01 19:42:18,965 - INFO - Split dataset: 996 samples for val
+2025-08-01 19:42:18,968 - INFO - Created dataloaders: 332 train batches, 83 val batches
+2025-08-01 19:42:18,968 - INFO - Train samples: 3984, Val samples: 996
+2025-08-01 19:42:18,968 - INFO - Data loaders created: 332 train batches, 83 val batches
+2025-08-01 19:42:19,034 - INFO - Model created with 2,105,003 total parameters (2,105,003 trainable)
+2025-08-01 19:42:26,083 - INFO - === Starting Stage 0: Spatial Pretraining ===
+2025-08-01 21:22:37,842 - INFO - === Starting Stage 1: Temporal Training ===
+2025-08-01 22:57:15,566 - INFO - === Starting Stage 2: End-to-End Fine-tuning ===
+2025-08-02 03:18:52,789 - INFO - Training completed successfully!
+2025-08-02 03:18:52,912 - INFO - Final model saved to checkpoints\outdoor_cr32_enhanced_data\outdoor_cr1_32_T20_enhanced_data_20250801_1942_final_model.pth
+2025-08-02 03:18:52,912 - INFO - Training summary saved to ./checkpoints/outdoor_cr32_enhanced_data/training_summary_outdoor_cr1_32.json
