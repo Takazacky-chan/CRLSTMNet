@@ -1,0 +1,28 @@
+{
+  "config_path": "configs/outdoor_cr64.yaml",
+  "compression_ratio": "1/64",
+  "dataset_type": "outdoor",
+  "use_dummy_data": false,
+  "total_params": 2105003,
+  "trainable_params": 2105003,
+  "gpu_info": {
+    "name": "NVIDIA GeForce GTX 1650",
+    "memory_gb": 4.294705152
+  },
+  "start_time": "2025-08-03T12:47:27.919428",
+  "analyze_complexity": true,
+  "model_complexity": {
+    "total_params_M": 2.105003,
+    "trainable_params_M": 2.105003,
+    "total_flops_G": 8.1702408,
+    "flops_method": "fvcore",
+    "flops_per_param": 3881.3440170869117,
+    "peak_memory_MB": 32.9541015625
+  },
+  "stage0": {
+    "completed": true,
+    "loaded_from_checkpoint": true
+  },
+  "interrupted": true,
+  "end_time": "2025-08-03T12:47:51.575291"
+}
