@@ -1,0 +1,47 @@
+{
+  "input_shape": "(20, 2, 32, 32)",
+  "device": "cuda",
+  "model_name": "CRLSTMNetLite",
+  "parameters": {
+    "total_params": 2105003,
+    "trainable_params": 2105003,
+    "non_trainable_params": 0,
+    "total_params_M": 2.105003,
+    "trainable_params_M": 2.105003,
+    "param_details": {
+      "enc_hi": {
+        "total": 1084200,
+        "trainable": 1084200
+      },
+      "enc_lo": {
+        "total": 411800,
+        "trainable": 411800
+      },
+      "proj_hi2lo": {
+        "total": 25680,
+        "trainable": 25680
+      },
+      "temporal": {
+        "total": 155520,
+        "trainable": 155520
+      },
+      "decoder": {
+        "total": 421322,
+        "trainable": 421322
+      },
+      "fusion_gate": {
+        "total": 6481,
+        "trainable": 6481
+      }
+    }
+  },
+  "flops_main": {
+    "error": "No FLOPs calculation method available"
+  },
+  "memory": {
+    "peak_memory_allocated_MB": 62.552734375,
+    "peak_memory_reserved_MB": 108.0,
+    "current_memory_allocated_MB": 8.3720703125,
+    "current_memory_reserved_MB": 28.0
+  }
+}
