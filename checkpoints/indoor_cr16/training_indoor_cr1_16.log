@@ -1,0 +1,61 @@
+2025-07-30 16:32:06,372 - INFO - Starting training on cuda
+2025-07-30 16:32:06,372 - INFO - Configuration: configs/indoor_cr16.yaml
+2025-07-30 16:32:06,372 - INFO - Compression ratio: 1/16
+2025-07-30 16:32:06,372 - INFO - Dataset type: indoor
+2025-07-30 16:32:06,377 - INFO - GPU: NVIDIA GeForce GTX 1650, Memory: 4.3GB
+2025-07-30 16:32:06,382 - INFO - Initial GPU memory: 0.00GB
+2025-07-30 16:32:06,585 - INFO - Using indoor data from F:\CRLSTMNet\data\cost2100\indoor_20slots
+2025-07-30 16:32:06,585 - INFO - Found 20 .mat files with pattern
+2025-07-30 16:32:06,846 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t10_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:07,138 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t11_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:07,475 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t12_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:07,772 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t13_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:08,113 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t14_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:08,434 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t15_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:08,735 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t16_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:09,046 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t17_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:09,389 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t18_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:09,689 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t19_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:09,988 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t1_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:10,324 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t20_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:10,662 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t2_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:10,984 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t3_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:11,293 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t4_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:11,647 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t5_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:11,954 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t6_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:12,272 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t7_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:12,593 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t8_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:12,978 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t9_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:13,041 - INFO - Split dataset: 8000 samples for train
+2025-07-30 16:32:13,043 - INFO - Found 20 .mat files with pattern
+2025-07-30 16:32:13,463 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t10_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:13,942 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t11_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:14,552 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t12_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:15,309 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t13_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:15,770 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t14_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:16,130 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t15_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:16,469 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t16_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:16,787 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t17_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:17,098 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t18_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:17,410 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t19_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:17,718 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t1_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:18,031 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t20_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:18,426 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t2_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:18,876 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t3_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:19,410 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t4_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:19,770 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t5_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:20,143 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t6_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:20,862 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t7_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:21,209 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t8_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:21,535 - INFO - Processing F:\CRLSTMNet\data\cost2100\indoor_20slots\H_user_t9_32all.mat: shape (5000, 32, 32)
+2025-07-30 16:32:21,633 - INFO - Split dataset: 2000 samples for val
+2025-07-30 16:32:21,633 - INFO - Created dataloaders: 571 train batches, 143 val batches
+2025-07-30 16:32:21,633 - INFO - Train samples: 8000, Val samples: 2000
+2025-07-30 16:32:21,633 - INFO - Data loaders created: 571 train batches, 143 val batches
+2025-07-30 16:32:21,719 - INFO - Model created with 2,105,003 total parameters (2,105,003 trainable)
+2025-07-30 16:32:29,985 - INFO - === Starting Stage 0: Spatial Pretraining ===
+2025-07-30 19:08:04,943 - INFO - === Starting Stage 1: Temporal Training ===
+2025-07-30 20:38:21,405 - INFO - === Starting Stage 2: End-to-End Fine-tuning ===
+2025-07-31 01:08:17,375 - INFO - Training completed successfully!
+2025-07-31 01:08:17,591 - INFO - Final model saved to checkpoints\indoor_cr16\indoor_cr1_16_20250730_1632_final_model.pth
+2025-07-31 01:08:17,602 - INFO - Training summary saved to ./checkpoints/indoor_cr16/training_summary_indoor_cr1_16.json
