@@ -1,0 +1,33 @@
+{
+  "config_path": "configs/indoor_cr4.yaml",
+  "compression_ratio": "1/4",
+  "dataset_type": "indoor",
+  "use_dummy_data": false,
+  "total_params": 2105003,
+  "trainable_params": 2105003,
+  "gpu_info": {
+    "name": "NVIDIA GeForce GTX 1650",
+    "memory_gb": 4.294705152
+  },
+  "start_time": "2025-08-02T09:11:19.702939",
+  "analyze_complexity": true,
+  "model_complexity": {
+    "total_params_M": 2.105003,
+    "trainable_params_M": 2.105003,
+    "peak_memory_MB": 62.4638671875
+  },
+  "stage0": {
+    "completed": true,
+    "low_loss": 0.1371703028678894,
+    "high_loss": 0.08881993945688009
+  },
+  "stage1": {
+    "completed": true,
+    "best_loss": 0.18308739930391313
+  },
+  "stage2": {
+    "completed": true,
+    "best_loss": 0.15694885104894638
+  },
+  "end_time": "2025-08-02T18:30:02.048147"
+}
