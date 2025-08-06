@@ -3,7 +3,7 @@
 
 ## Introduction
 This repository contains the original models described in 
-Ran Chen, “Efficient CSI Feedback in FDD Massive MIMO", as the result of  postgraduate individual project
+Ran Chen, “Efficient CSI Feedback in FDD Massive MIMO", as the result of individual project
 
 ## Requirements
 - torch==1.12.0+cu116
