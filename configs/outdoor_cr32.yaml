@@ -1,0 +1,196 @@
+# configs/outdoor_cr32_enhanced_data.yaml - Outdoor 1/32 configuration supporting 32×64 data
+model:
+  name: CRLSTMNet
+  spatial:
+    res_blocks: 5                    # Increase residual blocks for outdoor complex environment
+    channels: 40                     # Increase channel count
+    latent_dim_high: 320             # Increase high-dimensional feature capacity
+    latent_dim_low: 80               # Increase low-dimensional feature capacity
+    negative_slope: 0.3
+    output_activation: linear
+  temporal:
+    layers: 3                        # 3 LSTM layers for outdoor temporal complexity
+    bidirectional: false
+  sequence:
+    T: 20                           # Use longer sequence for outdoor environment
+
+training:
+  batch_size: 12                     # Outdoor data is more complex, moderately reduce batch_size
+  num_workers: 0
+  amp: true                          # Mixed precision must be enabled
+  grad_clip: 1.0
+  optimizer: adamw
+  weight_decay: 1e-4
+  pin_memory: true
+  persistent_workers: false
+  drop_last: false                   # 🔧 Allow incomplete batches, avoid 0 batches with small data
+
+  # Advanced training configuration
+  gradient_accumulation_steps: 2     # Effective batch size = 12*2 = 24
+  use_onecycle: true
+  max_lr_factor: 4.0
+
+# Outdoor environment optimized training stage settings
+stage0:
+  epochs: 80                         # Outdoor spatial features are more complex
+  lr: 1e-3
+  warmup_epochs: 12
+  cosine: true
+  validate_every: 8
+  early_stop:
+    patience: 18                     # Outdoor convergence is slower, increase patience
+    min_delta: 0.0002
+
+  # Advanced configuration
+  multi_scale: true
+  scale_factors: [0.8, 1.0, 1.2]
+
+stage1:
+  epochs: 50                         # Outdoor temporal modeling is more important
+  lr: 5e-4
+  validate_every: 5
+  early_stop:
+    patience: 12
+    min_delta: 0.0002
+  latent_consistency_weight: 0.15
+
+  # Temporal enhancement settings
+  temporal_regularization: 0.08
+  use_temporal_consistency: true
+
+stage2:
+  epochs: 40                         # Outdoor end-to-end training
+  lr: 2e-4
+  validate_every: 8
+  early_stop:
+    patience: 12
+    min_delta: 0.0002
+
+  # End-to-end fine-tuning enhancement
+  lr_decay_factor: 0.5
+  lr_decay_patience: 10
+  use_cosine_restart: true
+
+# Outdoor environment optimized loss weights
+loss:
+  nmse: 1.0
+  cos: 0.20                          # Outdoor correlation is more important
+  tsmooth: 0.08                      # Outdoor has large temporal fluctuations, increase smooth constraint
+
+  # New loss terms
+  freq_domain: 0.12                  # Outdoor frequency features are more important
+  correlation: 0.18                  # Directly optimize correlation coefficient
+
+data:
+  root: F:\CRLSTMNet\data\cost2100
+  indoor_path: outdoor_20slots       # 🚨Critical: point to outdoor data directory
+  pdiff_path: P_diff_T
+  dataset_spec:
+    prefix: H_user_t
+    suffix: 32all.mat
+    variable_name: Hur_down_t1        # Confirm variable name in outdoor .mat files
+    train_split: 0.8
+  split: outdoor                      # Identify as outdoor environment
+  snr: 30
+  cr: 1/32
+  cr_rate: 0.03125
+  cr_num: 32
+  speed: 30                           # Outdoor movement speed is usually higher
+  normalize: per_batch               # 🔧 Use dynamic normalization for large outdoor dynamic range
+  use_pdiff: false
+  cache_data: true
+  prefetch_factor: 2
+  allow_dummy_data: false
+
+  # 🔧 New: enhanced data processing configuration
+  stride: 10                         # Sliding window step, 10 means no overlap, 5 means 50% overlap
+  downsample_method: smart_avg       # Downsampling method: smart_avg, lowpass_decimate, center_crop
+
+  # Optional advanced data processing configuration
+  data_validation:
+    enabled: true                    # Enable data quality validation
+    energy_threshold_db: 3.0         # Energy change threshold (dB)
+    correlation_threshold: 0.95      # Reconstruction correlation threshold
+
+logging:
+  project: crlstm_cost2100_outdoor_enhanced_data
+  run_name: outdoor_cr32_T20_enhanced_data
+  save_dir: ./checkpoints/outdoor_cr32_enhanced_data
+  log_interval: 10
+  save_top_k: 3
+  max_val_batches: 80
+
+# Hardware optimization settings
+device: cuda
+seed: 2025
+deterministic: false
+benchmark: true
+
+# Complexity analysis configuration
+analyze_complexity: true
+
+# Outdoor experiment naming configuration
+model_naming:
+  dataset_type: outdoor
+  compression_ratio: "1_32_T20_enhanced_data"
+  include_timestamp: true
+
+# Training monitoring configuration
+monitoring:
+  use_tqdm: true
+  save_metrics: true
+  metrics_file: metrics_outdoor_cr32_enhanced_data.json
+  save_learning_curves: true
+  plot_frequency: 10
+
+# Data augmentation settings
+data_augmentation:
+  enabled: true
+  noise_std: 0.015                   # Increase noise intensity for outdoor environment
+  channel_shuffle: true
+  temporal_shift: true
+
+# Model architecture enhancements
+architecture_enhancements:
+  use_attention: false
+  use_residual_connections: true
+  use_channel_attention: true
+  use_spatial_attention: false
+
+# Advanced training techniques
+advanced_training:
+  use_ema: true
+  ema_decay: 0.998
+  use_label_smoothing: false
+  use_mixup: false
+  lr_finder: false
+  use_distillation: true
+  teacher_temperature: 4.5
+  distillation_alpha: 0.35
+
+# Checkpoint resume settings
+resume:
+  enabled: true
+  checkpoint_path: null
+  load_optimizer: true
+  load_scheduler: true
+  load_best_metric: true
+
+# Data processing method explanation
+# downsample_method options:
+# - 'smart_avg': Smart averaging + √2 energy normalization (recommended for most cases)
+# - 'lowpass_decimate': Low-pass filtering + 2x decimation (most physically reasonable, but slower)
+# - 'center_crop': Center cropping (keep middle 32 subcarriers, fast but may lose edge info)
+# - 'simple_avg': Simple averaging (not recommended, reduces power)
+
+# stride configuration recommendations:
+# - stride = T (sequence length): No overlap, fewer samples but faster training
+# - stride = T//2: 50% overlap, balance sample count and diversity
+# - stride = T//4: 75% overlap, most samples but may overfit
+
+# Expected results (using enhanced data processing):
+# - Data sample count: 10-50x increase compared to original (depends on stride setting)
+# - Training stability: Significant improvement (avoid few sample issues)
+# - Energy retention: smart_avg method expected within ±1dB
+# - Information retention: Expected 90%+ information preserved
+# - NMSE improvement: Expected 3-5dB improvement over simple reshape

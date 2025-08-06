@@ -1,0 +1,179 @@
+# configs/outdoor_cr4_enhanced_data.yaml - Outdoor 1/4 configuration supporting 32×64 data (easiest task)
+model:
+  name: CRLSTMNet
+  spatial:
+    res_blocks: 5                    # Reduce to 4 residual blocks for easy task
+    channels: 40                     # Moderate number of channels
+    latent_dim_high: 320             # Reduce high-dim features to 256
+    latent_dim_low: 80               # Reduce low-dim features to 64
+    negative_slope: 0.3
+    output_activation: linear
+  temporal:
+    layers: 3                        # Reduce to 2 LSTM layers (relatively easy task)
+    bidirectional: false
+  sequence:
+    T: 20                           # Shorter sequence length sufficient
+
+training:
+  batch_size: 12                     # Larger batch_size (easy task, sufficient memory)
+  num_workers: 0
+  amp: true
+  grad_clip: 1.0
+  optimizer: adamw
+  weight_decay: 1e-4
+  pin_memory: true
+  persistent_workers: false
+  drop_last: false
+
+  # Advanced training configuration
+  gradient_accumulation_steps: 2     # Effective batch size = 16*2 = 32
+  use_onecycle: true
+  max_lr_factor: 4.5                 # Higher learning rate factor (easy task)
+
+# 1/4 outdoor training stage settings (shortest training time)
+stage0:
+  epochs: 70                         # Reduce spatial pre-training for easy task
+  lr: 1e-3
+  warmup_epochs: 10                  # Reduce warmup
+  cosine: true
+  validate_every: 8
+  early_stop:
+    patience: 15                     # Smaller patience value
+    min_delta: 0.0008               # More lenient improvement threshold
+
+  multi_scale: true
+  scale_factors: [0.8, 1.0, 1.2]
+
+stage1:
+  epochs: 50                         # Reduce temporal training
+  lr: 5e-4
+  validate_every: 6
+  early_stop:
+    patience: 12
+    min_delta: 0.0008
+  latent_consistency_weight: 0.12    # Reduce consistency weight
+
+  temporal_regularization: 0.04      # Lower temporal regularization
+  use_temporal_consistency: true
+
+stage2:
+  epochs: 30                         # Shortest end-to-end training
+  lr: 2e-4
+  validate_every: 6
+  early_stop:
+    patience: 18
+    min_delta: 0.0008
+
+  lr_decay_factor: 0.6               # Gentler decay
+  lr_decay_patience: 8
+  use_cosine_restart: true
+
+# 1/4 outdoor loss weights (lowest constraints)
+loss:
+  nmse: 1.0
+  cos: 0.12                          # Lowest cosine similarity weight
+  tsmooth: 0.05                      # Lowest temporal smoothness weight
+
+  freq_domain: 0.06                  # Lowest frequency domain loss weight
+  correlation: 0.10                  # Lowest correlation coefficient loss weight
+
+data:
+  root: F:\CRLSTMNet\data\cost2100
+  indoor_path: outdoor_20slots
+  pdiff_path: P_diff_T
+  dataset_spec:
+    prefix: H_user_t
+    suffix: 32all.mat
+    variable_name: Hur_down_t1
+    train_split: 0.8
+  split: outdoor
+  snr: 30
+  cr: 1/4                            # 1/4 compression ratio
+  cr_rate: 0.25
+  cr_num: 256                        # 256 measurements (sufficient information)
+  speed: 30
+  normalize: per_batch
+  use_pdiff: false
+  cache_data: true
+  prefetch_factor: 2
+  allow_dummy_data: false
+
+  # 1/4 data processing configuration (efficiency focused)
+  stride: 12                         # Non-overlapping, fast training
+  downsample_method: smart_avg     # Fastest method, 1/4 task has sufficient information to tolerate
+
+  data_validation:
+    enabled: true
+    energy_threshold_db: 5.0         # Most lenient energy threshold
+    correlation_threshold: 0.90      # More lenient reconstruction quality requirement
+
+logging:
+  project: crlstm_cost2100_outdoor_cr4_enhanced
+  run_name: outdoor_cr4_T12_enhanced_data
+  save_dir: ./checkpoints/outdoor_cr4_enhanced
+  log_interval: 8
+  save_top_k: 3
+  max_val_batches: 100               # Can use more validation batches
+
+device: cuda
+seed: 2025
+deterministic: false
+benchmark: true
+
+# Complexity analysis configuration
+analyze_complexity: true
+
+model_naming:
+  dataset_type: outdoor
+  compression_ratio: "1_4_T12_enhanced"
+  include_timestamp: true
+
+monitoring:
+  use_tqdm: true
+  save_metrics: true
+  metrics_file: metrics_outdoor_cr4_enhanced.json
+  save_learning_curves: true
+  plot_frequency: 8
+
+# 1/4 data augmentation (can use stronger augmentation)
+data_augmentation:
+  enabled: true
+  noise_std: 0.015                   # Higher noise intensity (easy task can tolerate)
+  channel_shuffle: true
+  temporal_shift: true
+
+architecture_enhancements:
+  use_attention: false
+  use_residual_connections: true
+  use_channel_attention: true
+  use_spatial_attention: false
+
+# 1/4 advanced training techniques
+advanced_training:
+  use_ema: true
+  ema_decay: 0.9995                 # Higher decay rate
+  use_label_smoothing: false
+  use_mixup: false
+  lr_finder: false
+  use_distillation: true
+  teacher_temperature: 3.2          # Lower distillation temperature
+  distillation_alpha: 0.22          # Lower distillation weight
+
+resume:
+  enabled: true
+  checkpoint_path: null
+  load_optimizer: true
+  load_scheduler: true
+  load_best_metric: true
+
+# 1/4 special notes:
+# - Easiest task, focus on training efficiency
+# - Use shorter sequence T=12 and non-overlapping stride=12
+# - Model complexity moderately reduced
+# - center_crop method is fast and acceptable when information is sufficient
+# - All loss weights are the lowest
+
+# Expected performance (1/4):
+# - NMSE(dB): -22 ~ -30 dB (best performance)
+# - ρ: 0.88 ~ 0.95 (high correlation)
+# - Training time: Shortest, quickly verify architecture effectiveness

@@ -1,0 +1,179 @@
+# configs/outdoor_cr64_enhanced_data.yaml - Outdoor 1/64 configuration supporting 32×64 data (most difficult task)
+model:
+  name: CRLSTMNet
+  spatial:
+    res_blocks: 5                    # Keep 5 residual blocks
+    channels: 40                     # Keep 40 channels
+    latent_dim_high: 320             # Keep high-dimensional features at 320
+    latent_dim_low: 80               # Keep low-dimensional features at 80
+    negative_slope: 0.3
+    output_activation: linear
+  temporal:
+    layers: 3                        # Keep 3 LSTM layers for outdoor complexity
+    bidirectional: false
+  sequence:
+    T: 20                           # 1/64 is most difficult, use longest sequence to capture correlation
+
+training:
+  batch_size: 8                      # 1/64 most difficult + long sequence, further reduce batch_size
+  num_workers: 0
+  amp: true                          # Mixed precision must be enabled
+  grad_clip: 1.0
+  optimizer: adamw
+  weight_decay: 1e-4
+  pin_memory: true
+  persistent_workers: false
+  drop_last: false                   # Allow incomplete batches
+
+  # Advanced training configuration
+  gradient_accumulation_steps: 4     # Effective batch size = 8*4 = 32
+  use_onecycle: true
+  max_lr_factor: 3.0                 # Use most conservative learning rate factor for 1/64
+
+# 1/64 outdoor training stage settings (longest training time)
+stage0:
+  epochs: 70                        # Most difficult task needs most spatial pre-training
+  lr: 8e-4                          # More conservative initial learning rate
+  warmup_epochs: 18                  # Longest warmup period
+  cosine: true
+  validate_every: 12                 # Reduce validation frequency to save time
+  early_stop:
+    patience: 30                     # Maximum patience value
+    min_delta: 0.0001               # Most precise improvement threshold
+
+  multi_scale: true
+  scale_factors: [0.8, 1.0, 1.2]
+
+stage1:
+  epochs: 50                         # Most temporal training
+  lr: 3e-4                          # Conservative learning rate
+  validate_every: 10
+  early_stop:
+    patience: 25                     # Large patience value
+    min_delta: 0.0001
+  latent_consistency_weight: 0.15
+
+  temporal_regularization: 0.12      # Strongest temporal regularization
+  use_temporal_consistency: true
+
+stage2:
+  epochs: 40                         # Most end-to-end training
+  lr: 1e-4                          # Most precise learning rate
+  validate_every: 12
+  early_stop:
+    patience: 35                     # Maximum patience value
+    min_delta: 0.0001
+
+  lr_decay_factor: 0.5
+  lr_decay_patience: 15
+  use_cosine_restart: true
+
+# 1/64 outdoor loss weights (strongest constraints)
+loss:
+  nmse: 1.0
+  cos: 0.30                          # Highest cosine similarity weight
+  tsmooth: 0.12                      # Highest temporal smoothness weight
+
+  freq_domain: 0.18                  # Highest frequency domain loss weight
+  correlation: 0.25                  # Highest correlation coefficient loss weight
+
+data:
+  root: F:\CRLSTMNet\data\cost2100
+  indoor_path: outdoor_20slots
+  pdiff_path: P_diff_T
+  dataset_spec:
+    prefix: H_user_t
+    suffix: 32all.mat
+    variable_name: Hur_down_t1
+    train_split: 0.8
+  split: outdoor
+  snr: 30
+  cr: 1/64                           # 1/64 compression ratio
+  cr_rate: 0.015625
+  cr_num: 16                         # Only 16 measurements
+  speed: 30
+  normalize: per_batch               # Dynamic normalization for outdoor dynamic range
+  use_pdiff: false
+  cache_data: true
+  prefetch_factor: 2
+  allow_dummy_data: false
+
+  # 1/64 data processing configuration (most conservative)
+  stride: 4                          # Maximum overlap, maximum sample count
+  downsample_method: smart_avg       # Most physically reasonable method, maximize information retention
+
+  data_validation:
+    enabled: true
+    energy_threshold_db: 1.5         # Strictest energy threshold
+    correlation_threshold: 0.98      # Highest reconstruction quality requirement
+
+logging:
+  project: crlstm_cost2100_outdoor_cr64_enhanced
+  run_name: outdoor_cr64_T25_enhanced_data
+  save_dir: ./checkpoints/outdoor_cr64_enhanced
+  log_interval: 15
+  save_top_k: 3
+  max_val_batches: 50                # Reduce validation batches to save time
+
+device: cuda
+seed: 2025
+deterministic: false
+benchmark: true
+
+# Complexity analysis configuration
+analyze_complexity: true
+
+model_naming:
+  dataset_type: outdoor
+  compression_ratio: "1_64_T25_enhanced"
+  include_timestamp: true
+
+monitoring:
+  use_tqdm: true
+  save_metrics: true
+  metrics_file: metrics_outdoor_cr64_enhanced.json
+  save_learning_curves: true
+  plot_frequency: 15
+
+# 1/64 data augmentation (strongest)
+data_augmentation:
+  enabled: true
+  noise_std: 0.025                   # Highest noise intensity (difficult task needs stronger generalization)
+  channel_shuffle: true
+  temporal_shift: true
+
+architecture_enhancements:
+  use_attention: false
+  use_residual_connections: true
+  use_channel_attention: true
+  use_spatial_attention: false
+
+# 1/64 advanced training techniques
+advanced_training:
+  use_ema: true
+  ema_decay: 0.995                   # Smallest decay rate, strongest smoothing
+  use_label_smoothing: false
+  use_mixup: false
+  lr_finder: false
+  use_distillation: true
+  teacher_temperature: 6.0           # Highest distillation temperature
+  distillation_alpha: 0.45           # Highest distillation weight
+
+resume:
+  enabled: true
+  checkpoint_path: null
+  load_optimizer: true
+  load_scheduler: true
+  load_best_metric: true
+
+# 1/64 Special Notes:
+# - Most difficult compression task, requires most conservative training strategy
+# - Uses longest sequence T=25 and maximum overlap stride=5
+# - All loss weights and regularizations set to strongest
+# - Longest training time and maximum patience values
+# - Uses lowpass_decimate to ensure maximum information retention
+
+# Expected Performance (1/64):
+# - NMSE(dB): -8 ~ -16 dB (most challenging)
+# - ρ: 0.65 ~ 0.78 (relatively low correlation but acceptable)
+# - Training time: longest, requires maximum patience

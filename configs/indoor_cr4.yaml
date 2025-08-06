@@ -1,0 +1,165 @@
+# configs/indoor_cr4.yaml - Indoor 1/4 compression ratio configuration
+model:
+  name: CRLSTMNet
+  spatial:
+    res_blocks: 5                    # Significantly increase residual blocks (6→7)
+    channels: 40                     # Significantly increase channels (48→64)
+    latent_dim_high: 320             # Significantly increase high-dim latent (384→512)
+    latent_dim_low: 80              # Significantly increase low-dim latent (96→128)
+    negative_slope: 0.3
+    output_activation: linear
+  temporal:
+    layers: 3                        # Increase LSTM layers to 4
+    bidirectional: false             # Consider setting to true but requires more memory
+  sequence:
+    T: 10
+
+training:
+  batch_size: 10                     # Reduce batch_size to accommodate larger model
+  num_workers: 0
+  amp: true                          # Must enable mixed precision
+  grad_clip: 1.0
+  optimizer: adamw
+  weight_decay: 1e-4
+  pin_memory: true
+  persistent_workers: false
+
+  # Gradient accumulation settings
+  gradient_accumulation_steps: 3     # Effective batch size = 10*3 = 30
+  use_onecycle: true
+  max_lr_factor: 4.0                 # Reduce learning rate factor for stability
+
+# Stage-specific settings (1/4 compression ratio - relatively easy)
+stage0:
+  epochs: 60                         # 1/4 compression ratio is relatively easy, reduce epochs
+  lr: 1e-3
+  warmup_epochs: 8                   # Reduce warmup
+  cosine: true
+  validate_every: 5
+  early_stop:
+    patience: 12                     # Reduce patience
+    min_delta: 0.0005               # More lenient stopping condition
+
+  # Multi-scale training
+  multi_scale: true
+  scale_factors: [0.8, 1.0, 1.2]
+
+stage1:
+  epochs: 35                         # Reduce stage1 training
+  lr: 5e-4
+  validate_every: 3
+  early_stop:
+    patience: 10                     # Reduce patience
+    min_delta: 0.0005
+  latent_consistency_weight: 0.12    # Moderately reduce consistency weight
+
+  # Temporal enhancement settings
+  temporal_regularization: 0.04      # Reduce regularization weight
+  use_temporal_consistency: true
+
+stage2:
+  epochs: 45                         # Reduce stage2 training
+  lr: 2e-4
+  validate_every: 5
+  early_stop:
+    patience: 15                     # Moderate patience
+    min_delta: 0.0005
+
+  # End-to-end fine-tuning enhancement
+  lr_decay_factor: 0.6               # Slightly gentler decay
+  lr_decay_patience: 6
+  use_cosine_restart: true
+
+loss:
+  nmse: 1.0
+  cos: 0.15                          # Reduce cosine similarity weight (1/4 is relatively easy)
+  tsmooth: 0.06                      # Reduce temporal smoothness weight
+
+  # New loss terms - 1/4 compression ratio can have smaller weights
+  freq_domain: 0.06                  # Frequency domain loss weight
+  correlation: 0.10                  # Correlation coefficient loss
+
+data:
+  root: F:\CRLSTMNet\data\cost2100
+  indoor_path: indoor_20slots
+  pdiff_path: P_diff_T
+  dataset_spec:
+    prefix: H_user_t
+    suffix: 32all.mat
+    variable_name: Hur_down_t1
+    train_split: 0.8
+  split: indoor
+  snr: 30
+  cr: 1/4                            # 1/4 compression ratio
+  cr_rate: 0.25
+  cr_num: 256                        # 256 measurements
+  speed: 30
+  normalize: standardize
+  use_pdiff: false
+  cache_data: true
+  prefetch_factor: 2
+  allow_dummy_data: false
+
+logging:
+  project: crlstm_cost2100_cr4
+  run_name: indoor_cr4_experiment
+  save_dir: ./checkpoints/indoor_cr4
+  log_interval: 10
+  save_top_k: 3
+  max_val_batches: 100
+
+# Hardware optimization settings
+device: cuda
+seed: 2025
+deterministic: false
+benchmark: true
+
+# Model naming configuration
+model_naming:
+  dataset_type: indoor
+  compression_ratio: "1_4"
+  include_timestamp: true
+
+# Complexity analysis configuration
+analyze_complexity: true
+
+# Training monitoring configuration
+monitoring:
+  use_tqdm: true
+  save_metrics: true
+  metrics_file: metrics_indoor_cr4.json
+  save_learning_curves: true
+  plot_frequency: 10
+
+# Data augmentation settings - 1/4 compression ratio can use stronger augmentation
+data_augmentation:
+  enabled: true
+  noise_std: 0.012                  # Increase noise intensity
+  channel_shuffle: true
+  temporal_shift: true
+
+# Model architecture enhancements
+architecture_enhancements:
+  use_attention: false               # Large model can consider enabling attention
+  use_residual_connections: true
+  use_channel_attention: true
+  use_spatial_attention: false
+
+# Advanced training techniques
+advanced_training:
+  use_ema: true
+  ema_decay: 0.9995                 # Slightly increase EMA decay
+  use_label_smoothing: false
+  use_mixup: false
+  lr_finder: false
+  use_distillation: true
+  teacher_temperature: 3.5          # Reduce distillation temperature
+  distillation_alpha: 0.25          # Reduce distillation weight
+
+# Resume training settings
+resume:
+  enabled: true
+  checkpoint_path: null
+  load_optimizer: true
+  load_scheduler: true
+  load_best_metric: true

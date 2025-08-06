@@ -1,0 +1,171 @@
+# configs/indoor_cr32_enhanced.yaml - Enhanced 1/32 configuration based on complete migration from cr64
+model:
+  name: CRLSTMNet
+  spatial:
+    res_blocks: 5                    # Increase residual blocks (4→5)
+    channels: 40                     # Increase channels (32→40)
+    latent_dim_high: 320             # Increase high-dim latent (256→320)
+    latent_dim_low: 80               # Increase low-dim latent (64→80)
+    negative_slope: 0.3
+    output_activation: linear
+  temporal:
+    layers: 3                        # Increase LSTM layers (2→3)
+    bidirectional: false
+  sequence:
+    T: 10
+
+training:
+  batch_size: 16                     # Keep 16, suitable for 1/32 complexity
+  num_workers: 0
+  amp: true                          # Enable mixed precision
+  grad_clip: 1.0
+  optimizer: adamw
+  weight_decay: 1e-4                 # Increase regularization
+  pin_memory: true
+  persistent_workers: false
+
+  # Advanced training config migrated from cr64 (not supported by current code, reserved for future extension)
+  gradient_accumulation_steps: 2     # Effective batch size = 16*2 = 32
+  use_onecycle: true                 # Use OneCycleLR
+  max_lr_factor: 5.0                 # Max LR is 5x base lr
+
+# Stage-specific settings (complete migration from cr64)
+stage0:
+  epochs: 70                         # Increase epochs (50→70)
+  lr: 1e-3
+  warmup_epochs: 10                  # Increase warmup (5→10)
+  cosine: true
+  validate_every: 5
+  early_stop:
+    patience: 15                     # Increase patience (10→15)
+    min_delta: 0.0003               # More sensitive stopping condition
+
+  # Advanced config migrated from cr64 (not supported by current code)
+  multi_scale: true
+  scale_factors: [0.8, 1.0, 1.2]
+
+stage1:
+  epochs: 50                         # Significantly increase stage1 training (20→35)
+  lr: 5e-4
+  validate_every: 3
+  early_stop:
+    patience: 12                     # Increase patience (8→12)
+    min_delta: 0.0003
+  latent_consistency_weight: 0.15    # Increase consistency loss weight (Note: hardcoded as 0.1 in code)
+
+  # Temporal enhancement settings migrated from cr64 (not supported by current code)
+  temporal_regularization: 0.05      # Temporal regularization weight
+  use_temporal_consistency: true     # Enable temporal consistency loss
+
+stage2:
+  epochs: 50                         # Increase stage2 training (30→50)
+  lr: 2e-4
+  validate_every: 5
+  early_stop:
+    patience: 18                     # Increase patience (10→18)
+    min_delta: 0.0003
+
+  # End-to-end fine-tuning enhancement migrated from cr64 (not supported by current code)
+  lr_decay_factor: 0.5               # Learning rate decay factor
+  lr_decay_patience: 8               # Learning rate decay patience
+  use_cosine_restart: true           # Use cosine restart
+
+loss:
+  nmse: 1.0
+  cos: 0.2                           # Significantly increase cosine similarity weight (0.1→0.2)
+  tsmooth: 0.08                      # Increase temporal smoothness weight (0.05→0.08)
+
+  # New loss terms migrated from cr64 (not supported by current code, reserved for future extension)
+  freq_domain: 0.1                   # Frequency domain loss weight
+  correlation: 0.15                  # Direct correlation coefficient optimization
+
+data:
+  root: F:\CRLSTMNet\data\cost2100
+  indoor_path: indoor_20slots
+  pdiff_path: P_diff_T
+  dataset_spec:
+    prefix: H_user_t
+    suffix: 32all.mat
+    variable_name: Hur_down_t1
+    train_split: 0.8
+  split: indoor
+  snr: 30
+  cr: 1/32
+  cr_rate: 0.03125
+  cr_num: 32
+  speed: 30
+  normalize: standardize
+  use_pdiff: false
+  cache_data: true
+  prefetch_factor: 2
+  allow_dummy_data: false           # Strictly disable dummy data
+
+logging:
+  project: crlstm_cost2100_cr32_enhanced
+  run_name: indoor_cr32_experiment_enhanced
+  save_dir: ./checkpoints/indoor_cr32_enhanced
+  log_interval: 10
+  save_top_k: 3
+  max_val_batches: 100
+
+# Hardware optimization settings
+device: cuda
+seed: 2025
+deterministic: false
+benchmark: true
+
+# Model naming configuration
+model_naming:
+  dataset_type: indoor
+  compression_ratio: "1_32_enhanced"
+  include_timestamp: true
+
+# Complexity analysis configuration
+analyze_complexity: true
+
+# Training monitoring configuration
+monitoring:
+  use_tqdm: true
+  save_metrics: true
+  metrics_file: metrics_indoor_cr32_enhanced.json
+
+  # Detailed monitoring migrated from cr64 (not supported by current code)
+  save_learning_curves: true
+  plot_frequency: 10
+
+# Data augmentation settings migrated from cr64 (not supported by current code, reserved for future extension)
+data_augmentation:
+  enabled: true
+  noise_std: 0.01                   # Add small amount of noise
+  channel_shuffle: true             # Channel random shuffling
+  temporal_shift: true              # Temporal random shift
+
+# Model architecture enhancements migrated from cr64 (not supported by current code)
+architecture_enhancements:
+  use_attention: false              # Temporarily disable attention mechanism
+  use_residual_connections: true    # Enable residual connections
+  use_channel_attention: true       # Enable channel attention
+  use_spatial_attention: false      # Disable spatial attention
+
+# Advanced training techniques migrated from cr64 (not supported by current code)
+advanced_training:
+  use_ema: true                     # Exponential moving average
+  ema_decay: 0.999
+  use_label_smoothing: false        # Label smoothing
+  use_mixup: false                  # Mixup data augmentation
+
+  # Learning rate finder
+  lr_finder: false                  # Whether to use learning rate search
+
+  # Knowledge distillation settings
+  use_distillation: true            # Enable knowledge distillation
+  teacher_temperature: 4.0          # Teacher network temperature
+  distillation_alpha: 0.3           # Distillation loss weight
+
+# Resume training settings
+resume:
+  enabled: true                     # Enable resume training
+  checkpoint_path: null
+  load_optimizer: true
+  load_scheduler: true
+  load_best_metric: true

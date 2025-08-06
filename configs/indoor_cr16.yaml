@@ -1,0 +1,165 @@
+# configs/indoor_cr16.yaml - Indoor 1/16 compression ratio configuration
+model:
+  name: CRLSTMNet
+  spatial:
+    res_blocks: 5                    # Further increase residual blocks (5→6)
+    channels: 40                     # Increase channels (40→48)
+    latent_dim_high: 320             # Increase high-dim latent (320→384)
+    latent_dim_low: 80               # Increase low-dim latent (80→96)
+    negative_slope: 0.3
+    output_activation: linear
+  temporal:
+    layers: 3                        # Keep 3 LSTM layers
+    bidirectional: false
+  sequence:
+    T: 10
+
+training:
+  batch_size: 14                     # Slightly reduce to accommodate larger model
+  num_workers: 0
+  amp: true                          # Enable mixed precision
+  grad_clip: 1.0
+  optimizer: adamw
+  weight_decay: 1e-4
+  pin_memory: true
+  persistent_workers: false
+
+  # Gradient accumulation settings
+  gradient_accumulation_steps: 2     # Effective batch size = 14*2 = 28
+  use_onecycle: true                 # Use OneCycleLR
+  max_lr_factor: 4.5                 # Slightly reduce learning rate factor
+
+# Stage-specific settings (1/16 compression ratio)
+stage0:
+  epochs: 75                         # Moderate number of epochs
+  lr: 1e-3
+  warmup_epochs: 10
+  cosine: true
+  validate_every: 5
+  early_stop:
+    patience: 15
+    min_delta: 0.0003
+
+  # Multi-scale training
+  multi_scale: true
+  scale_factors: [0.8, 1.0, 1.2]
+
+stage1:
+  epochs: 45                         # Moderate stage1 training
+  lr: 5e-4
+  validate_every: 3
+  early_stop:
+    patience: 12
+    min_delta: 0.0003
+  latent_consistency_weight: 0.15
+
+  # Temporal enhancement settings
+  temporal_regularization: 0.05
+  use_temporal_consistency: true
+
+stage2:
+  epochs: 55                         # Moderate stage2 training
+  lr: 2e-4
+  validate_every: 5
+  early_stop:
+    patience: 18
+    min_delta: 0.0003
+
+  # End-to-end fine-tuning enhancement
+  lr_decay_factor: 0.5
+  lr_decay_patience: 8
+  use_cosine_restart: true
+
+loss:
+  nmse: 1.0
+  cos: 0.18                          # Moderate cosine similarity weight
+  tsmooth: 0.07                      # Moderate temporal smoothness weight
+
+  # New loss terms
+  freq_domain: 0.08                  # Frequency domain loss weight
+  correlation: 0.12                  # Correlation coefficient loss
+
+data:
+  root: F:\CRLSTMNet\data\cost2100
+  indoor_path: indoor_20slots
+  pdiff_path: P_diff_T
+  dataset_spec:
+    prefix: H_user_t
+    suffix: 32all.mat
+    variable_name: Hur_down_t1
+    train_split: 0.8
+  split: indoor
+  snr: 30
+  cr: 1/16                           # 1/16 compression ratio
+  cr_rate: 0.0625
+  cr_num: 64                         # 64 measurements
+  speed: 30
+  normalize: standardize
+  use_pdiff: false
+  cache_data: true
+  prefetch_factor: 2
+  allow_dummy_data: false
+
+logging:
+  project: crlstm_cost2100_cr16
+  run_name: indoor_cr16_experiment
+  save_dir: ./checkpoints/indoor_cr16
+  log_interval: 10
+  save_top_k: 3
+  max_val_batches: 100
+
+# Hardware optimization settings
+device: cuda
+seed: 2025
+deterministic: false
+benchmark: true
+
+# Model naming configuration
+model_naming:
+  dataset_type: indoor
+  compression_ratio: "1_16"
+  include_timestamp: true
+
+# Complexity analysis configuration
+analyze_complexity: true
+
+# Training monitoring configuration
+monitoring:
+  use_tqdm: true
+  save_metrics: true
+  metrics_file: metrics_indoor_cr16.json
+  save_learning_curves: true
+  plot_frequency: 10
+
+# Data augmentation settings
+data_augmentation:
+  enabled: true
+  noise_std: 0.008                  # Slightly reduce noise
+  channel_shuffle: true
+  temporal_shift: true
+
+# Model architecture enhancements
+architecture_enhancements:
+  use_attention: false
+  use_residual_connections: true
+  use_channel_attention: true
+  use_spatial_attention: false
+
+# Advanced training techniques
+advanced_training:
+  use_ema: true
+  ema_decay: 0.999
+  use_label_smoothing: false
+  use_mixup: false
+  lr_finder: false
+  use_distillation: true
+  teacher_temperature: 4.0
+  distillation_alpha: 0.3
+
+# Resume training settings
+resume:
+  enabled: true
+  checkpoint_path: null
+  load_optimizer: true
+  load_scheduler: true
+  load_best_metric: true

@@ -1,0 +1,110 @@
+# configs/base.yaml - Base configuration file
+model:
+  name: CRLSTMNet
+  spatial:
+    res_blocks: 4                    # Base number of residual blocks
+    channels: 32                     # Base number of channels
+    latent_dim_high: 256             # High-dimensional feature dimension
+    latent_dim_low: 64               # Low-dimensional feature dimension
+    negative_slope: 0.3
+    output_activation: linear
+  temporal:
+    layers: 2                        # Number of LSTM layers
+    bidirectional: false
+  sequence:
+    T: 10                           # Sequence length
+
+training:
+  batch_size: 8                      # Base batch size
+  num_workers: 0                     # Windows compatible
+  amp: false                         # Mixed precision (enable as needed)
+  grad_clip: 1.0
+  optimizer: adam                    # Default optimizer
+  weight_decay: 0                    # Base weight decay
+  pin_memory: true
+  persistent_workers: false
+
+# Stage-specific settings - base version
+stage0:
+  epochs: 50                         # Base number of epochs
+  lr: 1e-3
+  warmup_epochs: 5
+  cosine: false
+  validate_every: 10
+  early_stop:
+    patience: 10
+    min_delta: 0.001
+
+stage1:
+  epochs: 30
+  lr: 5e-4
+  validate_every: 5
+  early_stop:
+    patience: 8
+    min_delta: 0.001
+
+stage2:
+  epochs: 30
+  lr: 2e-4
+  validate_every: 10
+  early_stop:
+    patience: 10
+    min_delta: 0.001
+
+# Base loss weights
+loss:
+  nmse: 1.0
+  cos: 0.1
+  tsmooth: 0.05
+
+# Data configuration - use environment variables or default paths
+data:
+  root: F:\CRLSTMNet\data\cost2100    # Your data path
+  indoor_path: indoor_20slots
+  pdiff_path: P_diff_T
+  dataset_spec:
+    prefix: H_user_t
+    suffix: 32all.mat
+    variable_name: Hur_down_t1
+    train_split: 0.8
+  split: indoor                      # Default indoor
+  snr: 30
+  cr: 1/32                          # Default compression ratio
+  cr_rate: 0.03125
+  cr_num: 32
+  speed: 30
+  normalize: standardize
+  use_pdiff: false
+  cache_data: true
+  prefetch_factor: 2
+  allow_dummy_data: true            # Base version allows dummy data for testing
+
+# Logging configuration
+logging:
+  project: crlstm_cost2100_base
+  run_name: base_experiment
+  save_dir: ./checkpoints
+  log_interval: 10
+  save_top_k: 3
+  max_val_batches: 50
+
+# Hardware configuration
+device: cuda
+seed: 2025
+deterministic: false
+benchmark: true
+
+# Complexity analysis configuration
+analyze_complexity: false            # Don't analyze complexity by default
+
+# Model naming configuration
+model_naming:
+  dataset_type: indoor
+  compression_ratio: "1_32"
+  include_timestamp: false
+
+# Training monitoring configuration
+monitoring:
+  use_tqdm: true
+  save_metrics: true
+  metrics_file: metrics.json
